@@ -10,6 +10,7 @@ import { TABLE_HEAD, CLASSROOMS } from '../model/TypeEnum';
 export default function TablePage({ table }) {
   const textRef = useRef()
   const [results, setResults] = useState([])
+  const [visibleResults, setVisibleResults] = useState([])
   const { getFromApi } = useFetchApi();
 
   useEffect(() => {
@@ -18,27 +19,33 @@ export default function TablePage({ table }) {
 
   useEffect(() => {
     console.log(results);
+    setVisibleResults(results)
   }, [results])
+
+  function filterResults(){
+    console.log(textRef.current.value);
+  }
 
   return (
     <>
       <div>
         <Box sx={{ backgroundColor: '#cccccc' }}>
           <AppBar position="static">
-            <Toolbar sx={{ backgroundColor: '#D9D9D9' }}>
+            <Toolbar sx={{ backgroundColor: '#D9D9D9', display:'flex', justifyContent:'center' }}>
               <TextField
                 id="outlined-basic"
-                label= {`${table} filter`}
+                label= {`Filtrar`}
                 variant="outlined"
                 sx={{ ml: 2, backgroundColor: 'white', margin: '20px auto', width: '50%' }}
-                ref={textRef}
+                inputRef={textRef}
               />
+              <Button size='small' onClick={filterResults}>Buscar</Button>
             </Toolbar>
           </AppBar>
         </Box>
         <Box sx={{backgroundColor: "#D9D9D9", display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center' }}>
-          {results[0] && <TableHead data={Object.keys(results[0])} type={table}/>}
-          {results?.map(result => table === CLASSROOMS ? <Classroom data={result} key={`classroom${result.id}`} /> : <Resource data={result} key={`resource${result.id}`}/>)}
+          {visibleResults[0] && <TableHead data={Object.keys(visibleResults[0])} type={table}/>}
+          {visibleResults?.map(result => table === CLASSROOMS ? <Classroom data={result} key={`classroom${result.id}`} /> : <Resource data={result} key={`resource${result.id}`}/>)}
         </Box>
       </div>
     </>)
