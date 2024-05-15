@@ -18,61 +18,42 @@ const Home = () => {
                     </AppBar>
                 </Box>
                 <Box sx={{ backgroundColor: "#D9D9D9", display: 'flex', flexDirection: 'row', gap: 10, padding: 5, justifyContent: 'center', alignItems: 'center'  }}>
-                    <Card sx={{ maxWidth: 345 }}>
+                    <Card sx={{ maxWidth: 345, height: 420 }}>
                         <CardMedia
                             component="img"
-                            height="140"
+                            width="100%"
                             image={imgs[0]}
                             alt="Imagen de prueba"
                         />
                         <CardContent>
                             <Typography gutterBottom variant="h5" component="div">
-                                Nombre del lugar
+                                Recursos
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                Descripción del lugar
+                                Recursos para hacer las clases más dinámicas
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button size="small">Detalles</Button>
+                            <Button size="small" to="/resources">Detalles</Button>
                         </CardActions>
                     </Card>
-                    <Card sx={{ maxWidth: 345 }}>
+                    <Card sx={{ maxWidth: 345, height: 420 }}>
                         <CardMedia
                             component="img"
-                            height="140"
-                            image={imgs[1]}
-                            alt="Imagen de prueba"
-                        />
-                        <CardContent>
-                            <Typography gutterBottom variant="h5" component="div">
-                                Nombre del lugar
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                Descripción del lugar
-                            </Typography>
-                        </CardContent>
-                        <CardActions>
-                            <Button size="small">Detalles</Button>
-                        </CardActions>
-                    </Card>
-                    <Card sx={{ maxWidth: 345 }}>
-                        <CardMedia
-                            component="img"
-                            height="140"
+                            width="100%"
                             image={imgs[2]}
                             alt="Imagen de prueba"
                         />
                         <CardContent>
                             <Typography gutterBottom variant="h5" component="div">
-                                Nombre del lugar
+                                Salones
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                Descripción del lugar
+                                Espacios para impartir clases
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button size="small">Detalles</Button>
+                            <Button size="small" to="/classrooms">Detalles</Button>
                         </CardActions>
                     </Card>
                 </Box>
