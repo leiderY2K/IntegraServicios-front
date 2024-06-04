@@ -1,15 +1,41 @@
-import React from 'react';
-import { TextField, Button, Checkbox, FormControlLabel, Box, Card, CardContent, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { TextField, Button, Box, Card, CardContent, Typography, FormHelperText } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const [loginError, setLoginError] = useState('');
+    const navigate = useNavigate();
 
-    const onSubmit = (data) => {
-        console.log(data);
-        const nombreCompleto = `${data.nombre} ${data.apellido}`;
-        console.log(nombreCompleto);
+    const onSubmit = async (data) => {
+        try {
+            const response = await fetch('http://localhost:8080/user/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'idUser': data.numero_identificacion
+                }
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                // El usuario existe y tenemos sus datos
+                localStorage.setItem('userId', data.numero_identificacion);
+                localStorage.setItem('userName', userData.name || userData.username || 'Usuario');
+                setLoginError('');
+                navigate('/');
+            } else if (response.status === 404) {
+                // El servidor devolvió 404, lo que significa que el usuario no existe
+                setLoginError('Usuario no encontrado');
+            } else {
+                // Otro tipo de error del servidor
+                setLoginError('Error al verificar el usuario');
+            }
+        } catch (error) {
+            setLoginError('Error de conexión');
+            console.error('Error:', error);
+        }
     };
 
     return (
@@ -23,34 +49,23 @@ const Login = () => {
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                 <TextField
-                                    {...register('email')}
-                                    id="email"
-                                    label="Correo"
+                                    {...register('numero_identificacion', { required: 'Campo requerido' })}
+                                    id="numero_identificacion"
+                                    label="Número de identificación"
                                     variant="outlined"
                                     fullWidth
                                     sx={{ marginBottom: 2 }}
                                 />
-                                <TextField
-                                    {...register('password')}
-                                    id="password"
-                                    label="Contraseña"
-                                    type="password"
-                                    variant="outlined"
-                                    fullWidth
-                                    sx={{ marginBottom: 2 }}
-                                />
-                                <FormControlLabel
-                                    control={<Checkbox {...register('rememberPassword')} />}
-                                    label="Recordar contraseña"
-                                    sx={{ marginBottom: 2 }}
-                                />
+                                {errors.numero_identificacion && <FormHelperText error>{errors.numero_identificacion.message}</FormHelperText>}
+                                {loginError && <FormHelperText error>{loginError}</FormHelperText>}
+                                
                                 <Button variant="contained" size="large" type="submit">
                                     Ingresar
                                 </Button>
-                                <RouterLink component={RouterLink} to="/" variant="body2" align="center">
+                                <RouterLink to="/" variant="body2" align="center">
                                     Volver a la página de inicio
                                 </RouterLink>
-                                <RouterLink component={RouterLink} to="/register" variant="body2" align="center">
+                                <RouterLink to="/register" variant="body2" align="center">
                                     Registrate
                                 </RouterLink>
                             </Box>
@@ -61,4 +76,5 @@ const Login = () => {
         </div>
     );
 };
+
 export default Login;

@@ -10,5 +10,7 @@ export default function useFetchApi() {
     setterFunction(response.data)
   }
 
+   
+
   return { getFromApi }
 }
